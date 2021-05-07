@@ -1,16 +1,17 @@
 import { useStore } from '../store'
 import Measure from './Measure'
 
-const Track = ({ name }) => {
+const Track = ({ track }) => {
   const { state } = useStore()
 
   return (
     <div className="track">
-      <header className="track__header">{name}</header>
+      <header className="track__header">{track.name}</header>
       <div className="track__sequence">
-        {[...Array(state.measures).keys()].map(measure => (
-          <Measure key={measure} index={measure} />
-        ))}
+        {track.sequence &&
+          [...Array(state.measures).keys()].map(measure => (
+            <Measure key={measure} index={measure} track={track} />
+          ))}
       </div>
     </div>
   )
