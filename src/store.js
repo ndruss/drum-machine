@@ -4,11 +4,11 @@ import instruments from './constants/instruments'
 const StoreContext = createContext()
 
 const initialState = {
-  measures: 4,
+  measures: 2,
   subdivisions: 4,
   tempo: 100,
   tracks: [
-    { name: 'Kick', instrument: instruments.kick }, //
+    { name: 'Kick', instrument: instruments.kick },
     { name: 'Snare', instrument: instruments.snare },
   ],
 }
@@ -34,32 +34,31 @@ const reducer = (state, action) => {
       return {
         ...state,
         tracks: state.tracks.map(track => {
-          if (track.name === action.trackName) {
-            return {
-              ...track,
-              sequence: track.sequence.map((note, index) => ({
-                ...note,
-                isActive: index === action.index ? action.value : note.isActive,
-              })),
-            }
+          if (track.name !== action.trackName) return track
+
+          return {
+            ...track,
+            sequence: track.sequence.map((measure, measureIndex) => {
+              if (measureIndex !== action.measure) return measure
+              return measure.map((beat, beatIndex) => {
+                return beatIndex === action.index ? action.value : beat
+              })
+            }),
           }
-          return track
         }),
       }
     case 'PLAY_NOTE':
       return {
         ...state,
         tracks: state.tracks.map(track => {
-          if (track.name === action.trackName) {
-            return {
-              ...track,
-              sequence: track.sequence.map((note, index) => ({
-                ...note,
-                isPlaying: index === action.index,
-              })),
-            }
+          if (track.name !== action.trackName) return track
+          return {
+            ...track,
+            sequence: track.sequence.map((note, index) => ({
+              ...note,
+              isPlaying: index === action.index,
+            })),
           }
-          return track
         }),
       }
     default:

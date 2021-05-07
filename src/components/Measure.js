@@ -7,12 +7,7 @@ const Measure = ({ index, track }) => {
   return (
     <div className="measure" key={index}>
       {[...Array(state.subdivisions).keys()].map(beat => (
-        <Beat
-          key={beat}
-          measure={index}
-          index={beat + index * state.subdivisions}
-          track={track}
-        />
+        <Beat key={beat} measure={index} index={beat} track={track} />
       ))}
     </div>
   )

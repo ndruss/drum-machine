@@ -7,28 +7,24 @@ import Track from './Track'
 const DrumMachine = () => {
   const { state, dispatch } = useStore()
   const [isPlaying, setPlaying] = useState(false)
-  const [loop, setLoop] = useState(new Tone.Loop())
+  const [loop, setLoop] = useState([])
 
   useEffect(() => {
     dispatch({ type: 'INIT_SEQUENCE' })
   }, [])
 
   const playLoop = () => {
-    const { subdivisions, measures } = state
-    const totalBeats = subdivisions * measures
-
+    const { subdivisions } = state
     Tone.start().then(() => {
-      let i = 0
-
-      const newLoop = new Tone.Loop(() => {
-        state.tracks.forEach(track => {
-          if (track.sequence[i % totalBeats].isActive) {
-            track.instrument.playNote()
-          }
-        })
-
-        i++
-      }, `${subdivisions * subdivisions}n`).start(0)
+      const newLoop = state.tracks.map(({ instrument, sequence }) => {
+        return new Tone.Sequence(
+          (time, note) => {
+            instrument.sequenceHit(note, time)
+          },
+          sequence,
+          `${subdivisions}n`
+        ).start(0)
+      })
 
       setLoop(newLoop)
 
@@ -42,7 +38,10 @@ const DrumMachine = () => {
       playLoop()
     } else {
       Tone.Transport.stop()
-      loop.cancel()
+      loop.forEach(track => {
+        track.cancel()
+        track.dispose()
+      })
     }
     setPlaying(!isPlaying)
   }
