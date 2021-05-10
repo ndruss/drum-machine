@@ -10,7 +10,7 @@ const Beat = ({ measure, index, isPlaying, track }) => {
     // console.log(Tone.context.state)
     dispatch({
       type: 'TOGGLE_NOTE',
-      trackName: track.name,
+      trackName: track.instrument.name,
       measure,
       index,
       value: !isActive ? track.instrument.note : null,

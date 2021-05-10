@@ -15,13 +15,12 @@ const initialState = {
   timeSignature,
   measures: timeSignature[0],
   subdivisions: timeSignature[1],
-  currentBeat: 0,
+  sequence: [],
   loopProgress: [null],
-  isPlaying: false,
   tempo: 66,
   tracks: [
-    { name: 'Kick', instrument: kick, sequence: emptySequence },
-    { name: 'Snare', instrument: snare, sequence: emptySequence },
+    { instrument: kick, sequence: emptySequence },
+    { instrument: snare, sequence: emptySequence },
   ],
 }
 
@@ -32,23 +31,23 @@ const reducer = (state, action) => {
         ...state,
         tempo: action.tempo,
       }
-    case 'UPDATE_TIME':
-      const { currentBeat } = action
-      return {
-        ...state,
-        currentBeat,
-      }
     case 'UPDATE_PROGRESS':
       const { loopProgress } = action
       return {
         ...state,
         loopProgress,
       }
+    case 'UPDATE_SEQUENCE':
+      const { sequence } = action
+      return {
+        ...state,
+        sequence,
+      }
     case 'TOGGLE_NOTE':
       return {
         ...state,
         tracks: state.tracks.map(track => {
-          if (track.name !== action.trackName) return track
+          if (track.instrument.name !== action.trackName) return track
 
           return {
             ...track,

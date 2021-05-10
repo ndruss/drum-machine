@@ -2,59 +2,47 @@
 import * as Tone from 'tone'
 import { useState } from 'react'
 import { useStore } from '../store'
+import { updateSequence } from '../actions/update-sequence'
 import Track from './Track'
 
 const DrumMachine = () => {
   const { state, dispatch } = useStore()
   const [isPlaying, setPlaying] = useState(false)
-  const [loop, setLoop] = useState([])
 
   const trackTime = () => {
     const getPosition = position => {
       const array = position.split(':')
       return [array[1], array[2]].map(string => parseInt(string))
     }
-    Tone.Transport.scheduleRepeat(time => {
+    Tone.Transport.scheduleRepeat(() => {
       const loopProgress = getPosition(Tone.Transport.position)
-      console.log(loopProgress)
       dispatch({ type: 'UPDATE_PROGRESS', loopProgress })
     }, `${state.subdivisions * 4}n`)
   }
 
   const playLoop = () => {
-    const { subdivisions } = state
-    Tone.start().then(() => {
-      const newLoop = state.tracks.map(({ instrument, sequence }) => {
-        return new Tone.Sequence(
-          (time, note) => {
-            instrument.sequenceHit(note, time)
-          },
-          sequence,
-          `${subdivisions}n`
-        ).start(0)
-      })
-      setLoop(newLoop)
+    const sequence = updateSequence(state.tracks, state.subdivisions)
+    dispatch({ type: 'UPDATE_SEQUENCE', sequence })
+    trackTime()
 
-      trackTime()
-
-      Tone.Transport.timeSignature = state.timeSignature
-      Tone.Transport.bpm.value = state.tempo
-      Tone.Transport.loop = true
-      Tone.Transport.loopEnd = '1n'
-      Tone.Transport.on('loopEnd', e => {
-        console.log('loopEnd')
-      })
-      Tone.Transport.start()
-    })
+    Tone.Transport.timeSignature = state.timeSignature
+    Tone.Transport.bpm.value = state.tempo
+    Tone.Transport.loop = true
+    Tone.Transport.loopEnd = '1n'
+    Tone.Transport.start()
   }
 
   const togglePlayback = () => {
     if (!isPlaying) {
-      playLoop()
+      if (Tone.context.state !== 'running') {
+        Tone.start().then(playLoop)
+      } else {
+        playLoop()
+      }
     } else {
       Tone.Transport.stop()
       Tone.Transport.cancel()
-      loop.forEach(track => {
+      state.sequence.forEach(track => {
         track.cancel()
         track.dispose()
       })
@@ -70,7 +58,7 @@ const DrumMachine = () => {
     <div className="drum-machine">
       <div className="track-container">
         {state.tracks.map(track => (
-          <Track key={track.name} track={track} />
+          <Track key={track.instrument.name} track={track} />
         ))}
       </div>
       <div className="controls">

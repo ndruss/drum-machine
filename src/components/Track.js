@@ -6,7 +6,7 @@ const Track = ({ track }) => {
 
   return (
     <div className="track">
-      <header className="track__header">{track.name}</header>
+      <header className="track__header">{track.instrument.name}</header>
       <div className="track__sequence">
         {track.sequence &&
           [...Array(state.measures).keys()].map(measure => (
