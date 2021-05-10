@@ -44,6 +44,7 @@ const Controls = () => {
         track.cancel()
         track.dispose()
       })
+      dispatch({ type: 'UPDATE_PROGRESS', loopProgress: [null] })
     }
     setPlaying(!isPlaying)
   }

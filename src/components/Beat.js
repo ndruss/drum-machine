@@ -1,4 +1,5 @@
 import * as Tone from 'tone'
+import cc from 'classcat'
 import { useState } from 'react'
 import { useStore } from '../store'
 
@@ -7,7 +8,6 @@ const Beat = ({ measure, index, isPlaying, track }) => {
   const [isActive, setActive] = useState(!!track.sequence[measure][index])
 
   const toggleNote = () => {
-    // console.log(Tone.context.state)
     dispatch({
       type: 'TOGGLE_NOTE',
       trackName: track.instrument.name,
@@ -16,7 +16,6 @@ const Beat = ({ measure, index, isPlaying, track }) => {
       value: !isActive ? track.instrument.note : null,
     })
     setActive(!isActive)
-    // console.log(track.instrument)
     track.instrument.playNote()
   }
 
@@ -29,9 +28,14 @@ const Beat = ({ measure, index, isPlaying, track }) => {
   }
 
   return (
-    <div className={`beat ${isPlaying ? 'playing' : ''}`}>
-      <input type="checkbox" onChange={handleClick} checked={isActive} />
-    </div>
+    <div
+      className={cc({
+        beat: true,
+        isPlaying,
+        isActive,
+      })}
+      onMouseDown={handleClick}
+    />
   )
 }
 

@@ -1,6 +1,12 @@
 :root {
-  --extra-light-blue: rgb(137, 148, 163);
-  --dark-blue: rgb(35, 38, 42);
+  --gray-05: rgb(212, 220, 233);
+  --gray-10: rgb(175, 185, 199);
+  --gray-20: rgb(137, 148, 163);
+  --blue: rgb(0, 109, 230);
+  --gray-40: rgb(70, 76, 83);
+  --gray-50: rgb(54, 59, 65);
+  --gray-70: rgb(29, 33, 37);
+  --gray-100: rgb(4, 5, 5);
 }
 
 *,
@@ -19,8 +25,8 @@ body {
   font-size: 1.6rem;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: var(--dark-blue);
-  color: var(--extra-light-blue);
+  background: var(--gray-50);
+  color: var(--gray-10);
 }
 
 #root {
@@ -31,22 +37,22 @@ body {
 }
 
 .track-container {
-  border: solid 1px var(--extra-light-blue);
+  border: solid 1px var(--gray-100);
+  background: var(--gray-50);
 }
 
 .track {
   display: flex;
-  align-items: stretch;
+  height: 3rem;
 }
 
 .track + .track {
-  border-top: solid 1px var(--extra-light-blue);
+  border-top: solid 1px var(--gray-70);
 }
 
 .track__header {
   width: 10rem;
   padding: 0.5rem;
-  border-right: solid 1px var(--extra-light-blue);
 }
 
 .track__sequence {
@@ -57,16 +63,27 @@ body {
   display: flex;
 }
 
-.measure + .measure {
-  border-left: solid 1px var(--extra-light-blue);
-}
-
 .beat {
-  padding: 0.5rem;
+  width: 4rem;
+  position: relative;
+  border-left: solid 1px var(--gray-70);
+  cursor: pointer;
 }
 
-.beat.playing {
-  background: yellow;
+.beat:first-child {
+  border-color: var(--gray-100);
+}
+
+.beat.isPlaying {
+  background: var(--gray-40);
+}
+
+.beat.isActive {
+  background: var(--gray-20);
+}
+
+.beat.isActive.isPlaying {
+  background: var(--gray-05);
 }
 
 .controls {

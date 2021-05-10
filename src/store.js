@@ -60,20 +60,6 @@ const reducer = (state, action) => {
           }
         }),
       }
-    case 'PLAY_NOTE':
-      return {
-        ...state,
-        tracks: state.tracks.map(track => {
-          if (track.name !== action.trackName) return track
-          return {
-            ...track,
-            sequence: track.sequence.map((note, index) => ({
-              ...note,
-              isPlaying: index === action.index,
-            })),
-          }
-        }),
-      }
     default:
       throw new Error(`Unhandled action type: ${action.type}`)
   }
