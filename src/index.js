@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { StoreProvider } from './store'
 import DrumMachine from './components/DrumMachine'
+// import Playground from './components/Playground'
 import './styles/index.css'
 
 const App = () => (

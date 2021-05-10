@@ -2,10 +2,9 @@ import * as Tone from 'tone'
 import { useState } from 'react'
 import { useStore } from '../store'
 
-const Beat = ({ measure, index, track }) => {
+const Beat = ({ measure, index, isPlaying, track }) => {
   const { dispatch } = useStore()
-  const note = track.sequence[measure][index]
-  const [isActive, setActive] = useState(!!note)
+  const [isActive, setActive] = useState(!!track.sequence[measure][index])
 
   const toggleNote = () => {
     // console.log(Tone.context.state)
@@ -30,7 +29,7 @@ const Beat = ({ measure, index, track }) => {
   }
 
   return (
-    <div className="beat">
+    <div className={`beat ${isPlaying ? 'playing' : ''}`}>
       <input type="checkbox" onChange={handleClick} checked={isActive} />
     </div>
   )

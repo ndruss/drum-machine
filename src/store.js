@@ -3,13 +3,25 @@ import instruments from './constants/instruments'
 
 const StoreContext = createContext()
 
+const { kick, snare } = instruments
+
+const timeSignature = [2, 4]
+
+const emptySequence = Array(timeSignature[0]).fill(
+  Array(timeSignature[1]).fill(null)
+)
+
 const initialState = {
-  measures: 2,
-  subdivisions: 4,
-  tempo: 100,
+  timeSignature,
+  measures: timeSignature[0],
+  subdivisions: timeSignature[1],
+  currentBeat: 0,
+  loopProgress: [null],
+  isPlaying: false,
+  tempo: 66,
   tracks: [
-    { name: 'Kick', instrument: instruments.kick },
-    { name: 'Snare', instrument: instruments.snare },
+    { name: 'Kick', instrument: kick, sequence: emptySequence },
+    { name: 'Snare', instrument: snare, sequence: emptySequence },
   ],
 }
 
@@ -20,15 +32,17 @@ const reducer = (state, action) => {
         ...state,
         tempo: action.tempo,
       }
-    case 'INIT_SEQUENCE':
+    case 'UPDATE_TIME':
+      const { currentBeat } = action
       return {
         ...state,
-        tracks: state.tracks.map(track => ({
-          ...track,
-          sequence: Array(state.measures).fill(
-            Array(state.subdivisions).fill(null)
-          ),
-        })),
+        currentBeat,
+      }
+    case 'UPDATE_PROGRESS':
+      const { loopProgress } = action
+      return {
+        ...state,
+        loopProgress,
       }
     case 'TOGGLE_NOTE':
       return {

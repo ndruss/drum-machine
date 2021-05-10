@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as Tone from 'tone'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useStore } from '../store'
 import Track from './Track'
 
@@ -9,9 +9,17 @@ const DrumMachine = () => {
   const [isPlaying, setPlaying] = useState(false)
   const [loop, setLoop] = useState([])
 
-  useEffect(() => {
-    dispatch({ type: 'INIT_SEQUENCE' })
-  }, [])
+  const trackTime = () => {
+    const getPosition = position => {
+      const array = position.split(':')
+      return [array[1], array[2]].map(string => parseInt(string))
+    }
+    Tone.Transport.scheduleRepeat(time => {
+      const loopProgress = getPosition(Tone.Transport.position)
+      console.log(loopProgress)
+      dispatch({ type: 'UPDATE_PROGRESS', loopProgress })
+    }, `${state.subdivisions * 4}n`)
+  }
 
   const playLoop = () => {
     const { subdivisions } = state
@@ -25,10 +33,17 @@ const DrumMachine = () => {
           `${subdivisions}n`
         ).start(0)
       })
-
       setLoop(newLoop)
 
+      trackTime()
+
+      Tone.Transport.timeSignature = state.timeSignature
       Tone.Transport.bpm.value = state.tempo
+      Tone.Transport.loop = true
+      Tone.Transport.loopEnd = '1n'
+      Tone.Transport.on('loopEnd', e => {
+        console.log('loopEnd')
+      })
       Tone.Transport.start()
     })
   }
@@ -38,6 +53,7 @@ const DrumMachine = () => {
       playLoop()
     } else {
       Tone.Transport.stop()
+      Tone.Transport.cancel()
       loop.forEach(track => {
         track.cancel()
         track.dispose()

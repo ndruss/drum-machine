@@ -7,7 +7,15 @@ const Measure = ({ index, track }) => {
   return (
     <div className="measure" key={index}>
       {[...Array(state.subdivisions).keys()].map(beat => (
-        <Beat key={beat} measure={index} index={beat} track={track} />
+        <Beat
+          key={beat}
+          measure={index}
+          index={beat}
+          track={track}
+          isPlaying={
+            state.loopProgress[0] === index && state.loopProgress[1] === beat
+          }
+        />
       ))}
     </div>
   )
