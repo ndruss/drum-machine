@@ -23,6 +23,10 @@ const Controls = () => {
     dispatch({ type: 'UPDATE_SEQUENCE', sequence })
     trackTime()
 
+    sequence.forEach(track => {
+      track.start(0)
+    })
+
     Tone.Transport.timeSignature = state.timeSignature
     Tone.Transport.bpm.value = state.tempo
     Tone.Transport.loop = true
@@ -53,11 +57,21 @@ const Controls = () => {
     dispatch({ type: 'SET_TEMPO', tempo: e.target.value })
   }
 
+  const clearSequence = () => {
+    state.sequence.forEach(track => {
+      track.clear()
+    })
+    dispatch({ type: 'CLEAR_ALL_NOTES' })
+  }
+
   return (
     <div className="controls">
       <div>
         <button className="toggle-playback" onClick={togglePlayback}>
           {isPlaying ? 'Stop' : 'Play'}
+        </button>
+        <button className="clear" onClick={clearSequence}>
+          Clear
         </button>
       </div>
       <div>

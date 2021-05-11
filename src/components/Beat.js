@@ -1,11 +1,9 @@
 import * as Tone from 'tone'
 import cc from 'classcat'
-import { useState } from 'react'
 import { useStore } from '../store'
 
-const Beat = ({ measure, index, isPlaying, track }) => {
+const Beat = ({ measure, index, isPlaying, isActive, track }) => {
   const { dispatch } = useStore()
-  const [isActive, setActive] = useState(!!track.sequence[measure][index])
 
   const toggleNote = () => {
     dispatch({
@@ -15,7 +13,6 @@ const Beat = ({ measure, index, isPlaying, track }) => {
       index,
       value: !isActive ? track.instrument.note : null,
     })
-    setActive(!isActive)
     track.instrument.playNote()
   }
 

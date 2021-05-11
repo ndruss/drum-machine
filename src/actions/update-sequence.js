@@ -8,6 +8,6 @@ export const updateSequence = (tracks, subdivisions) => {
       },
       sequence,
       `${subdivisions}n`
-    ).start(0)
+    )
   })
 }

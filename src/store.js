@@ -3,9 +3,7 @@ import instruments from './constants/instruments'
 
 const StoreContext = createContext()
 
-const { kick, snare } = instruments
-
-const timeSignature = [2, 4]
+const timeSignature = [4, 4]
 
 const emptySequence = Array(timeSignature[0]).fill(
   Array(timeSignature[1]).fill(null)
@@ -18,10 +16,14 @@ const initialState = {
   sequence: [],
   loopProgress: [null],
   tempo: 66,
-  tracks: [
-    { instrument: kick, sequence: emptySequence },
-    { instrument: snare, sequence: emptySequence },
-  ],
+  tracks: instruments.map(instrument => ({
+    instrument,
+    sequence: emptySequence,
+  })),
+  // tracks: [
+  //   { instrument: kick, sequence: emptySequence },
+  //   { instrument: snare, sequence: emptySequence },
+  // ],
 }
 
 const reducer = (state, action) => {
@@ -48,7 +50,6 @@ const reducer = (state, action) => {
         ...state,
         tracks: state.tracks.map(track => {
           if (track.instrument.name !== action.trackName) return track
-
           return {
             ...track,
             sequence: track.sequence.map((measure, measureIndex) => {
@@ -59,6 +60,14 @@ const reducer = (state, action) => {
             }),
           }
         }),
+      }
+    case 'CLEAR_ALL_NOTES':
+      return {
+        ...state,
+        tracks: state.tracks.map(track => ({
+          ...track,
+          sequence: emptySequence,
+        })),
       }
     default:
       throw new Error(`Unhandled action type: ${action.type}`)
