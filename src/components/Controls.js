@@ -1,16 +1,21 @@
 import * as Tone from 'tone'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useStore } from '../store'
 import { updateSequence } from '../actions/update-sequence'
+import { convertVolume } from '../actions/convert-volume'
 
 const Controls = () => {
   const { state, dispatch } = useStore()
   const [isPlaying, setPlaying] = useState(false)
 
+  useEffect(() => {
+    Tone.Destination.volume.value = convertVolume(state.volume)
+  }, [])
+
   const trackTime = () => {
     const getPosition = position => {
       const array = position.split(':')
-      return [array[1], array[2]].map(string => parseInt(string))
+      return [array[1], array[2]].map(string => parseInt(string, 10))
     }
     Tone.Transport.scheduleRepeat(() => {
       const loopProgress = getPosition(Tone.Transport.position)
@@ -57,6 +62,11 @@ const Controls = () => {
     dispatch({ type: 'SET_TEMPO', tempo: e.target.value })
   }
 
+  const changeVolume = e => {
+    Tone.Destination.volume.value = convertVolume(e.target.value)
+    dispatch({ type: 'SET_VOLUME', tempo: e.target.value })
+  }
+
   const clearSequence = () => {
     state.sequence.forEach(track => {
       track.clear()
@@ -77,6 +87,10 @@ const Controls = () => {
       <div>
         <span>Tempo: </span>
         <input type="number" value={state.tempo} onChange={changeTempo} />
+      </div>
+      <div>
+        <span>Volume: </span>
+        <input type="number" value={state.volume} onChange={changeVolume} />
       </div>
     </div>
   )
