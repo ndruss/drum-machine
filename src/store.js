@@ -15,12 +15,12 @@ const initialState = {
   subdivisions: timeSignature[1],
   sequence: [],
   loopProgress: [null],
-  volume: 10,
+  volume: 9,
   tempo: 66,
   tracks: instruments.map(instrument => ({
     instrument,
-    sequence: emptySequence
-  }))
+    sequence: emptySequence,
+  })),
   // tracks: [
   //   { instrument: kick, sequence: emptySequence },
   //   { instrument: snare, sequence: emptySequence },
@@ -32,24 +32,24 @@ const reducer = (state, action) => {
     case 'SET_VOLUME':
       return {
         ...state,
-        volume: action.volume
+        volume: action.volume,
       }
     case 'SET_TEMPO':
       return {
         ...state,
-        tempo: action.tempo
+        tempo: action.tempo,
       }
     case 'UPDATE_PROGRESS':
       const { loopProgress } = action
       return {
         ...state,
-        loopProgress
+        loopProgress,
       }
     case 'UPDATE_SEQUENCE':
       const { sequence } = action
       return {
         ...state,
-        sequence
+        sequence,
       }
     case 'TOGGLE_NOTE':
       return {
@@ -63,17 +63,17 @@ const reducer = (state, action) => {
               return measure.map((beat, beatIndex) => {
                 return beatIndex === action.index ? action.value : beat
               })
-            })
+            }),
           }
-        })
+        }),
       }
     case 'CLEAR_ALL_NOTES':
       return {
         ...state,
         tracks: state.tracks.map(track => ({
           ...track,
-          sequence: emptySequence
-        }))
+          sequence: emptySequence,
+        })),
       }
     default:
       throw new Error(`Unhandled action type: ${action.type}`)
