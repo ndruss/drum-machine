@@ -1,9 +1,9 @@
 import * as Tone from 'tone'
 import cc from 'classcat'
-import { useStore } from '../store'
+import { useSequence } from '../contexts/sequence'
 
 const Beat = ({ measure, index, isPlaying, isActive, track }) => {
-  const { dispatch } = useStore()
+  const { dispatch } = useSequence()
 
   const toggleNote = () => {
     dispatch({

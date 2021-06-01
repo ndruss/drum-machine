@@ -1,4 +1,4 @@
-import { useStore } from '../store'
+import { useSequence } from '../contexts/sequence'
 import Measure from './Measure'
 
 const Track = ({ track, measures }) => (
@@ -14,6 +14,6 @@ const Track = ({ track, measures }) => (
 )
 
 export default ({ track }) => {
-  const { state } = useStore()
+  const { state } = useSequence()
   return <Track track={track} measures={state.measures} />
 }

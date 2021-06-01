@@ -1,10 +1,10 @@
-import { useStore } from '../store'
+import { useSequence } from '../contexts/sequence'
 import Beat from './Beat'
 
 const Measure = ({ index, track }) => {
   const {
     state: { subdivisions, loopProgress },
-  } = useStore()
+  } = useSequence()
 
   return (
     <div className="measure" key={index}>

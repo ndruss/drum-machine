@@ -36,7 +36,7 @@ const instruments = [
       this.synth.triggerAttackRelease(this.note, '4n')
     },
     sequenceHit(note, time) {
-      this.synth.triggerAttackRelease(0.1, time)
+      this.synth.triggerAttackRelease(note, time)
     },
   },
   {

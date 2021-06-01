@@ -1,9 +1,9 @@
-import { useStore } from '../store'
+import { useSequence } from '../contexts/sequence'
 import Track from './Track'
 import Controls from './Controls'
 
 const DrumMachine = () => {
-  const { state } = useStore()
+  const { state } = useSequence()
   return (
     <div className="drum-machine">
       <div className="track-container">

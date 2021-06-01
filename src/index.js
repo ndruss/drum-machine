@@ -1,15 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { StoreProvider } from './store'
+import { SequenceProvider } from './contexts/sequence'
+import { ControlsProvider } from './contexts/controls'
 import DrumMachine from './components/DrumMachine'
 // import Playground from './components/Playground'
 import './styles/index.css'
 
 const App = () => (
   <React.StrictMode>
-    <StoreProvider>
-      <DrumMachine />
-    </StoreProvider>
+    <ControlsProvider>
+      <SequenceProvider>
+        <DrumMachine />
+      </SequenceProvider>
+    </ControlsProvider>
   </React.StrictMode>
 )
 

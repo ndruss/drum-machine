@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer } from 'react'
-import instruments from './constants/instruments'
+import instruments from '../constants/instruments'
 
-const StoreContext = createContext()
+const SequenceContext = createContext()
 
 const timeSignature = [4, 4]
 
@@ -15,30 +15,14 @@ const initialState = {
   subdivisions: timeSignature[1],
   sequence: [],
   loopProgress: [null],
-  volume: 9,
-  tempo: 66,
   tracks: instruments.map(instrument => ({
     instrument,
     sequence: emptySequence,
   })),
-  // tracks: [
-  //   { instrument: kick, sequence: emptySequence },
-  //   { instrument: snare, sequence: emptySequence },
-  // ],
 }
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'SET_VOLUME':
-      return {
-        ...state,
-        volume: action.volume,
-      }
-    case 'SET_TEMPO':
-      return {
-        ...state,
-        tempo: action.tempo,
-      }
     case 'UPDATE_PROGRESS':
       const { loopProgress } = action
       return {
@@ -80,14 +64,14 @@ const reducer = (state, action) => {
   }
 }
 
-export const StoreProvider = ({ children }) => {
+export const SequenceProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
   return (
-    <StoreContext.Provider value={{ state, dispatch }}>
+    <SequenceContext.Provider value={{ state, dispatch }}>
       {children}
-    </StoreContext.Provider>
+    </SequenceContext.Provider>
   )
 }
 
-export const useStore = () => useContext(StoreContext)
+export const useSequence = () => useContext(SequenceContext)

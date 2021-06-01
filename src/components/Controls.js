@@ -1,16 +1,13 @@
 import * as Tone from 'tone'
-import { useState, useEffect } from 'react'
-import { useStore } from '../store'
+import { useState } from 'react'
+import { useSequence } from '../contexts/sequence'
 import { updateSequence } from '../actions/update-sequence'
-import { convertVolume } from '../actions/convert-volume'
+import VolumeControl from './VolumeControl'
+import TempoControl from './TempoControl'
 
 const Controls = () => {
-  const { state, dispatch } = useStore()
+  const { state, dispatch } = useSequence()
   const [isPlaying, setPlaying] = useState(false)
-
-  useEffect(() => {
-    Tone.Destination.volume.value = convertVolume(state.volume)
-  }, [])
 
   const trackTime = () => {
     const getPosition = position => {
@@ -58,15 +55,6 @@ const Controls = () => {
     setPlaying(!isPlaying)
   }
 
-  const changeTempo = e => {
-    dispatch({ type: 'SET_TEMPO', tempo: e.target.value })
-  }
-
-  const changeVolume = e => {
-    Tone.Destination.volume.value = convertVolume(e.target.value)
-    dispatch({ type: 'SET_VOLUME', tempo: e.target.value })
-  }
-
   const clearSequence = () => {
     state.sequence.forEach(track => {
       track.clear()
@@ -84,14 +72,8 @@ const Controls = () => {
           Clear
         </button>
       </div>
-      <div>
-        <span>Tempo: </span>
-        <input type="number" value={state.tempo} onChange={changeTempo} />
-      </div>
-      <div>
-        <span>Volume: </span>
-        <input type="number" value={state.volume} onChange={changeVolume} />
-      </div>
+      <TempoControl />
+      <VolumeControl />
     </div>
   )
 }
