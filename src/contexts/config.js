@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
-const ControlsContext = createContext()
+const ConfigContext = createContext()
 
 const initialState = {
   volume: 9,
-  tempo: 66,
+  tempo: 66
 }
 
 const reducer = (state, action) => {
@@ -12,26 +12,26 @@ const reducer = (state, action) => {
     case 'SET_VOLUME':
       return {
         ...state,
-        volume: action.volume,
+        volume: action.volume
       }
     case 'SET_TEMPO':
       return {
         ...state,
-        tempo: action.tempo,
+        tempo: action.tempo
       }
     default:
       throw new Error(`Unhandled action type: ${action.type}`)
   }
 }
 
-export const ControlsProvider = ({ children }) => {
+export const ConfigProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
   return (
-    <ControlsContext.Provider value={{ state, dispatch }}>
+    <ConfigContext.Provider value={{ state, dispatch }}>
       {children}
-    </ControlsContext.Provider>
+    </ConfigContext.Provider>
   )
 }
 
-export const useControls = () => useContext(ControlsContext)
+export const useConfig = () => useContext(ConfigContext)
