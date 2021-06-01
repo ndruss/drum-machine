@@ -30,7 +30,6 @@ const Controls = () => {
     })
 
     Tone.Transport.timeSignature = state.timeSignature
-    Tone.Transport.bpm.value = state.tempo
     Tone.Transport.loop = true
     Tone.Transport.loopEnd = '1n'
     Tone.Transport.start()
